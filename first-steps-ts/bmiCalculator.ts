@@ -1,4 +1,4 @@
-type Result =
+export type Result =
   | "very severly underweight"
   | "severly underweight"
   | "underweight"
@@ -8,26 +8,29 @@ type Result =
   | "severely obese"
   | "very severely obese";
 
-  interface BmiInputs {
-    value1: number;
-    value2: number;
+interface BmiInput {
+  value1: number;
+  value2: number;
+}
+
+const parseArguments = (args: Array<string>): BmiInput => {
+  if (args.length < 4) throw new Error("Not enough arguments");
+  if (args.length > 4) throw new Error("Too many arguments");
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    return {
+      value1: Number(args[2]),
+      value2: Number(args[3]),
+    };
+  } else {
+    throw new Error("Provided values were not numbers!");
   }
+};
 
-  const parseArguments = (args: Array<string>): BmiInputs => {
-    if (args.length < 4) throw new Error('Not enough arguments');
-    if (args.length > 4) throw new Error('Too many arguments');
-  
-    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
-      return {
-        value1: Number(args[2]),
-        value2: Number(args[3])
-      };
-    } else {
-      throw new Error('Provided values were not numbers!');
-    }    
-  };
-
-const calculateBmi = (height: number, mass: number): Result => {
+export const calculateBmi = (height: number, mass: number): Result => {
+  if(isNaN(height) || isNaN(mass))
+    throw new Error("Provided values were not numbers!");
+    
   const bmi = mass / ((height / 100) * (height / 100));
   if (bmi < 15) {
     return "very severly underweight";
@@ -43,16 +46,16 @@ const calculateBmi = (height: number, mass: number): Result => {
     return "moderately obese";
   } else if (bmi > 35 && bmi <= 40) {
     return "severely obese";
-  } else if (bmi > 40) {
+  } else {
     return "very severely obese";
   }
 };
 
-try {
-  const {value1, value2} = parseArguments(process.argv);
-  console.log(calculateBmi(value1, value2));
-} catch (error) {
-  console.log('Error, something went wrong: ', error.message);
+if(process.argv.length > 1) {
+  try {
+    const { value1, value2 } = parseArguments(process.argv);
+    console.log(calculateBmi(value1, value2));
+  } catch (error) {
+    console.log("Error, something went wrong: ", error.message);
+  }
 }
-
-
