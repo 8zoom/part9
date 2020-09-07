@@ -18,9 +18,9 @@ interface ExerciseInput {
   target: number;
   log: Array<number>;
 }
-const parseArgumentsBmi = (args: Array<string>): ExerciseInput => {
-  if (args.length < 3) throw new Error("Not enough arguments");
-  if (args.length > 30) throw new Error("Too many arguments");
+export const parseArgumentsExercise = (args: Array<string>): ExerciseInput => {
+  if (args.length < 3) throw new Error("Exercise calculator. Not enough arguments");
+  if (args.length > 30) throw new Error("Exercise calculator. Too many arguments");
 
   const checkForNaNInput = args
     .slice(2)
@@ -33,11 +33,11 @@ const parseArgumentsBmi = (args: Array<string>): ExerciseInput => {
       log: args.slice(3).map(x => Number(x)),
     };
   } else {
-    throw new Error("Provided values were not numbers!");
+    throw new Error("Exercise calculator. Provided values were not numbers!");
   }
 };
 
-const calculateExercises = (
+export const calculateExercises = (
   target: number,
   log: number[]
 ): exerciseEvaluation => {
@@ -57,11 +57,13 @@ const calculateExercises = (
   };
 };
 
-try {
-  const { target, log } = parseArgumentsBmi(process.argv);
-  console.log(calculateExercises(target, log));
-} catch (error) {
-  console.log("Error, something went wrong: ", error.message);
+if (process.argv.length > 2) {
+  try {
+    const { target, log } = parseArgumentsExercise (process.argv);
+    console.log(calculateExercises(target, log));
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.log("Exercise-Calculator. Error, something went wrong: ", error.message);
+  }
 }
-
 // console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));

@@ -13,7 +13,7 @@ interface BmiInput {
   value2: number;
 }
 
-const parseArguments = (args: Array<string>): BmiInput => {
+const parseArgumentsBmi = (args: Array<string>): BmiInput => {
   if (args.length < 4) throw new Error("Not enough arguments");
   if (args.length > 4) throw new Error("Too many arguments");
 
@@ -51,11 +51,12 @@ export const calculateBmi = (height: number, mass: number): Result => {
   }
 };
 
-if(process.argv.length > 1) {
+if(process.argv.length > 2) {
   try {
-    const { value1, value2 } = parseArguments(process.argv);
+    const { value1, value2 } = parseArgumentsBmi (process.argv);
     console.log(calculateBmi(value1, value2));
   } catch (error) {
-    console.log("Error, something went wrong: ", error.message);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.log("Bmi-Calculator. Error, something went wrong: ", error.message);
   }
 }
