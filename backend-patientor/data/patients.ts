@@ -9,6 +9,7 @@ const data =
         "dateOfBirth": "1986-07-09",
         "ssn": "090786-122X",
         "gender": "male",
+        "entries": [],
         "occupation": "New york city cop"
     },
     {
@@ -17,6 +18,7 @@ const data =
         "dateOfBirth": "1979-01-30",
         "ssn": "300179-77A",
         "gender": "male",
+        "entries": [],
         "occupation": "Cop"
     },
     {
@@ -25,6 +27,7 @@ const data =
         "dateOfBirth": "1970-04-25",
         "ssn": "250470-555L",
         "gender": "male",
+        "entries": [],
         "occupation": "Technician"
     },
     {
@@ -33,6 +36,7 @@ const data =
         "dateOfBirth": "1974-01-05",
         "ssn": "050174-432N",
         "gender": "female",
+        "entries": [],
         "occupation": "Forensic Pathologist"
     },
     {

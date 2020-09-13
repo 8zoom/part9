@@ -11,6 +11,7 @@ export const toNewPatientEntry = (object: any): NewPatientEntry => {
         dateOfBirth: parseDate(object.dateOfBirth),
         occupation: parseOccupation(object.occupation),
         gender: parseGender(object.gender),
+        entries: [],
         ssn: parseSsn(object.ssn)
     };
 
@@ -23,6 +24,13 @@ const isString = (text: any): text is string => {
 
   const isDate = (date: string): boolean => {
     return Boolean(Date.parse(date));
+  };
+
+  const parseDate = (date: any): string => {
+    if (!date || !isString(date) || !isDate(date)) {
+        throw new Error('Incorrect or missing date: ' + date);
+    }
+    return date;
   };
 
   const parseSsn = (ssn: any): string => {
@@ -46,14 +54,6 @@ const isString = (text: any): text is string => {
         return occupation ;
   };
   
-  
-  const parseDate = (date: any): string => {
-    if (!date || !isString(date) || !isDate(date)) {
-        throw new Error('Incorrect or missing date: ' + date);
-    }
-    return date;
-  };
-
   const isGender = (param: any): param is Gender => {
       return Object.values(Gender).includes(param);
   };

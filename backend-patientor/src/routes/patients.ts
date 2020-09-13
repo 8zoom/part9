@@ -5,7 +5,13 @@ import { toNewPatientEntry } from "../utils";
 const router = express.Router();
 
 router.get("/", (_req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   res.json(patientServices.getNonSensitivPatientData());
+});
+
+router.get("/:id", (req, res) => {
+  const id: string= req.params.id;
+  res.json(patientServices.findPatientById(id));
 });
 
 router.post("/", (req, res) => {
