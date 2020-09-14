@@ -4,7 +4,7 @@ import { Icon } from "semantic-ui-react";
 import { useStateValue } from "../state";
 import { Patient, Entry } from "../types";
 import Diagnoses from "./Diagnoses";
-
+import EntryDetails from "./EntryDetails";
 
 const PatientDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,11 +30,10 @@ const PatientDetails = () => {
         occupation: {patient.occupation}
 
         <h2>entries</h2>
-        {(entries.length > 0) ? (
+        {(entries.length > 0) ? 
+        (
           entries.map((e: Entry) =>  
-            <div key={e.id}>
-              <p> {e.date} <span style={{fontStyle: 'italic'}}>{e.description} </span></p>
-            </div>
+           <EntryDetails key={e.id} entry={e} />
           )
         ) :  <p>No entries for this patient</p> }
 
