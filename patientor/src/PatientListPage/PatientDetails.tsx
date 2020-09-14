@@ -2,7 +2,9 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 import { useStateValue } from "../state";
-import { Patient } from "../types";
+import { Patient, Entry } from "../types";
+import Diagnoses from "./Diagnoses";
+
 
 const PatientDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,14 +12,33 @@ const PatientDetails = () => {
   const patient = Object.values(patients).find((p: Patient) => p.id === id);
 
   if (!patient) return null;
+  const entries = patient.entries;
+
+  let codes: string[] | null= [];
+  for (const e of entries ){
+    if ('diagnosisCodes' in e && e.diagnosisCodes) codes = [...e.diagnosisCodes];
+  }
+  codes = codes.length > 0 ? codes : null;
 
   return (
     <div>
         <h2> {patient.name}
         <Icon name={patient.gender === 'male' ? 'mars' : (patient.gender ==='female' ?  'venus' : 'neuter') } />
         </h2>
-        <p> date of birth: {patient.dateOfBirth}</p>
-        <p> occupation: {patient.occupation}</p>
+        ssn: {patient.ssn} 
+        <br/>
+        occupation: {patient.occupation}
+
+        <h2>entries</h2>
+        {(entries.length > 0) ? (
+          entries.map((e: Entry) =>  
+            <div key={e.id}>
+              <p> {e.date} <span style={{fontStyle: 'italic'}}>{e.description} </span></p>
+            </div>
+          )
+        ) :  <p>No entries for this patient</p> }
+
+       {codes && <Diagnoses codes={codes} />}
     </div>
   );
 };

@@ -1,21 +1,23 @@
 import { v1 as uuid} from 'uuid';
-import { Patient, PublicPatient, NonSensitivePatientEntry, NewPatientEntry } from "../types";
+import { Patient, PublicPatient,  NewPatientEntry } from "../types";
 
 import patientData from "../../data/patients";
 
 const getPatients = (): Patient[] => patientData;
 
-const getNonSensitivPatientData = (): NonSensitivePatientEntry[] => {
-  return patientData.map(({ id, name, dateOfBirth, occupation, gender }) => ({
+const getNonSensitivPatientData = (): PublicPatient[] => {
+  return patientData.map(({ id, ssn, name, dateOfBirth, occupation, gender, entries }) => ({
     id,
+    ssn,
     name,
     dateOfBirth,
     occupation,
     gender,
+    entries,
   }));
 };
 
-const findPatientById = (id: string): PublicPatient => {
+const findPatientById = (id: string): Patient => {
   const patient = patientData.filter(p => p.id === id)[0];
   return patient;
 }; 
