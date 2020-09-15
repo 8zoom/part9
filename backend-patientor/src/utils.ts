@@ -1,8 +1,57 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-import {  Gender,  NewPatientEntry } from "./types";
+import {  Gender,  NewPatientEntry, Entry, NewEntry,
+   HospitalEntry as HospitalType,
+    HealthCheckEntry as HealthCheckType,
+     OccupationalHealthcareEntry as OccupationalType, 
+     assertNever} from "./types";
+
+export const toNewAdmissionEntry = (object: Entry): NewEntry => {
+  switch (object.type) {
+
+    case "Hospital":
+
+      const hospitalEntry: Omit<HospitalType, "id"> = {
+        description: object.description,
+        date: object.date,
+        specialist: object.specialist,
+        diagnosisCodes: object.diagnosisCodes,
+        type: "Hospital",
+        discharge: {date: object.discharge.date, criteria: object.discharge.criteria},
+        };
+      return hospitalEntry;
+
+    case "HealthCheck":
+
+      const healthCheckEntry: Omit<HealthCheckType, "id"> = {
+        description: object.description,
+        date: object.date,
+        specialist: object.specialist,
+        diagnosisCodes: object.diagnosisCodes,
+        type: "HealthCheck",
+        healthCheckRating: object.healthCheckRating
+      };
+      return healthCheckEntry;
+
+    case "OccupationalHealthcare":
+
+      const occupationalEntry: Omit<OccupationalType, "id"> = {
+        description: object.description,
+        date: object.date,
+        specialist: object.specialist,
+        diagnosisCodes: object.diagnosisCodes,
+        type: "OccupationalHealthcare",
+        employerName: object.employerName,
+      };
+      return   occupationalEntry;
+
+    default:
+      return assertNever(object);
+  }
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toNewPatientEntry = (object: any): NewPatientEntry => {
