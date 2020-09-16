@@ -9,11 +9,13 @@ import { useStateValue } from "../state";
 import { Patient, Entry } from "../types";
 import Diagnoses from "./Diagnoses";
 import EntryDetails from "./EntryDetails";
-import  AddEntryModal, {EntryFormValues} from '../AddEntryModal/AddEntryForm';
+
+import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
+import AddEntryModal from "../AddEntryModal";
 
 const PatientDetails: React.FC = () => {
-
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients }, dispatch ] = useStateValue();
+  const { id } = useParams<{ id: string }>();
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
@@ -26,12 +28,14 @@ const PatientDetails: React.FC = () => {
   };
 
   const submitNewEntry = async (values: EntryFormValues) => {
+    console.log('values?', values);
     try {
-      const { data: newPatient } = await axios.post<Patient>(
-        `${apiBaseUrl}/patients`,
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
         values
       );
-      dispatch({ type: "ADD_PATIENT", payload: newPatient });
+      dispatch({ type: "ADD_ENTRY", payload: newEntry});
+      console.log("done", newEntry);
       closeModal();
     } catch (e) {
       console.error(e.response.data);
@@ -39,46 +43,51 @@ const PatientDetails: React.FC = () => {
     }
   };
 
-  const { id } = useParams<{ id: string }>();
   const patient = Object.values(patients).find((p: Patient) => p.id === id);
-
   if (!patient) return null;
   const entries = patient.entries;
+  const showEntries = (entries: Entry[]) =>
+    entries.length > 0 ? (
+      entries.map((e: Entry) => <EntryDetails key={e.id} entry={e} />)
+    ) : (
+      <p>No entries for this patient</p>
+    );
 
-  const showEntries = (entries: Entry []) => 
-        (entries.length > 0) ? 
-        (
-          entries.map((e: Entry) =>  
-           <EntryDetails key={e.id} entry={e} />
-          )
-        ) :  <p>No entries for this patient</p>;
-
-
-  let codes: string[] | null= [];
-  for (const e of entries ){
-    if ('diagnosisCodes' in e && e.diagnosisCodes) codes = [...e.diagnosisCodes];
+  let codes: string[] | null = [];
+  for (const e of entries) {
+    if ("diagnosisCodes" in e && e.diagnosisCodes)
+      codes = [...e.diagnosisCodes];
   }
+
   codes = codes.length > 0 ? codes : null;
 
   return (
     <div>
-        <h2> {patient.name}
-          <Icon name={patient.gender === 'male' ? 'mars' : (patient.gender ==='female' ?  'venus' : 'neuter') } />
-        </h2>
-        ssn: {patient.ssn} <br/> occupation: {patient.occupation}
-
-
-        <AddEntryModal
+      <h2>
+        {" "}
+        {patient.name}
+        <Icon
+          name={
+            patient.gender === "male"
+              ? "mars"
+              : patient.gender === "female"
+              ? "venus"
+              : "neuter"
+          }
+        />
+      </h2>
+      ssn: {patient.ssn} <br /> occupation: {patient.occupation}
+      <br /> <br />
+      <AddEntryModal
         modalOpen={modalOpen}
         onSubmit={submitNewEntry}
         error={error}
         onClose={closeModal}
       />
-      <Button onClick={() => openModal()}>Add New Patient</Button>
-
-        <h2>entries</h2>
-        {showEntries(entries)}
-        {codes && <Diagnoses codes={codes} />}
+      <Button onClick={() => openModal()}>add entry</Button>
+      <h2>entries</h2>
+      {showEntries(entries)}
+      {codes && <Diagnoses codes={codes} />}
     </div>
   );
 };
