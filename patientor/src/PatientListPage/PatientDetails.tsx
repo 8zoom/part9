@@ -18,13 +18,27 @@ const PatientDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [className, setClassName] = React.useState<string>('');
+
   const [error, setError] = React.useState<string | undefined>();
 
-  const openModal = (): void => setModalOpen(true);
+  const openHospitalModal = (): void => {
+    setModalOpen(true);
+    setClassName('Hospital');
+  };
+  const openHealthCheckModal = (): void => {
+    setModalOpen(true);
+    setClassName('HealthCheck');
+  };
+  const openOccupationalModal = (): void => {
+    setModalOpen(true);
+    setClassName('OccupationalHealthcare');
+  };
 
   const closeModal = (): void => {
     setModalOpen(false);
     setError(undefined);
+    setClassName('');
   };
 
   const submitNewEntry = async (values: EntryFormValues) => {
@@ -83,8 +97,12 @@ const PatientDetails: React.FC = () => {
         onSubmit={submitNewEntry}
         error={error}
         onClose={closeModal}
+        className={className}
       />
-      <Button onClick={() => openModal()}>add entry</Button>
+
+     <Button onClick={() => openHospitalModal()} color={'google plus'}>add hospital entry</Button>
+      <Button onClick={() => openHealthCheckModal()} color={'violet'}>add healthcheck entry</Button>
+      <Button onClick={() => openOccupationalModal()} color={'teal'}>add occupational entry</Button>
       <h2>entries</h2>
       {showEntries(entries)}
       {codes && <Diagnoses codes={codes} />}

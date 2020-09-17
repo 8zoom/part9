@@ -23,7 +23,7 @@ const Diagnoses = ({ codes }: Props) => {
       );
       setDiagArray(results);
     })();
-  }, [setDiagArray]);
+  }, [setDiagArray, codes]);
 
   return (
     <ul>

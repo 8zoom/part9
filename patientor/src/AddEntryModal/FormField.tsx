@@ -78,6 +78,7 @@ export const NumberField: React.FC<NumberProps> = ({
   </Form.Field>
 );
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const DiagnosisSelection = ({
   diagnoses,
   setFieldValue,
